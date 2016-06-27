@@ -18,23 +18,31 @@ public class CameraController : MonoBehaviour {
 	Vector3[] translates;
 	Camera cam;
 
-
-
+    
+    public float zoomTranslateRange = 70.0f;
+    public float currentTranslation = 0.2f;
+    public float zoomIncrement = 0.1f;
+    protected float zoomV = 0.0f;
+    protected float targetTranslation;
+    protected float startTranslation;
 
 	void Awake()
 	{
 		boundPositions = new Vector3[15];
 		translates = new Vector3[15];
 		cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-
-	}
+        targetTranslation = currentTranslation;
+        
+    }
 	// Use this for initialization
 	void Start () {
 		Input.simulateMouseWithTouches = false;
 
 		targetfov = cam.fieldOfView;
 		scrolling = false;
-	}
+
+        startTranslation = currentTranslation;
+    }
 
 	// Update is called once per frame
 	void Update () {
@@ -164,7 +172,7 @@ public class CameraController : MonoBehaviour {
 
 
 
-
+    //TODO switch FOV to something like in handleScrolling()
 	//IMPORTANT: this way of pinching relies on boundpositions that are calculated in HandlePanning
 	// so make sure to call handlePanning before calling handlePinching
 	void handlePinching()
@@ -180,25 +188,25 @@ public class CameraController : MonoBehaviour {
 	bool scrolling;
 	void handleScrolling()
 	{
-		var d = Input.GetAxis("Mouse ScrollWheel");
+        var d = Input.GetAxis("Mouse ScrollWheel");
 		if(Mathf.Abs(d) > 0.1)
 		{
-			if(!scrolling)
-			{
-				targetfov = cam.fieldOfView;
-			}
 			scrolling = true;
-			var relfov = (d > 0) ? -5.0f : 5.0f;
-			targetfov += relfov;
-			targetfov = Mathf.Clamp(targetfov, 10.0f, 80.0f);
+            var relInc = (d > 0) ? zoomIncrement : -zoomIncrement;
+            targetTranslation = Mathf.Clamp01(targetTranslation + relInc);
 		}
 		if(scrolling)
 		{
-			cam.fieldOfView = Mathf.SmoothDamp(cam.fieldOfView, targetfov, ref scrollv, 0.1f);
-		}
-		if(Mathf.Abs(cam.fieldOfView - targetfov) < 0.1)
+            float newTranslation = Mathf.SmoothDamp(currentTranslation, targetTranslation, ref zoomV, 0.1f);
+            cam.transform.position = cam.transform.position + cam.transform.forward * (newTranslation - currentTranslation) * zoomTranslateRange;
+            currentTranslation = newTranslation;
+        }
+		if(Mathf.Abs(currentTranslation - targetTranslation) < 0.02)
 		{
-			scrolling = false;
+            float newTranslation = targetTranslation;
+            cam.transform.position = cam.transform.position + cam.transform.forward * (newTranslation - currentTranslation) * zoomTranslateRange;
+            currentTranslation = newTranslation;
+            scrolling = false;
 		}
 
 	}
