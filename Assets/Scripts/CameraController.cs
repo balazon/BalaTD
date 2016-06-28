@@ -6,11 +6,8 @@ using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour {
 
+	//tapping and dragging less then this means a click
 	public float sqrMinMoveMagnitude = 100.0f;
-
-
-	//for smooth mouse scrolling (smoothdamp function uses it)
-	protected float scrollv = 0.0f;
 
 	protected float targetfov;
 
@@ -18,13 +15,26 @@ public class CameraController : MonoBehaviour {
 	Vector3[] translates;
 	Camera cam;
 
-    
-    public float zoomTranslateRange = 70.0f;
-    public float currentTranslation = 0.2f;
-    public float zoomIncrement = 0.1f;
-    protected float zoomV = 0.0f;
-    protected float targetTranslation;
+
+	public float minDistance = 10.0f;
+	public float maxDistance = 80.0f;
+
+	//these variables are used for scrollzooming
+	public float zoomIncrement = 0.1f;
+	protected float zoomTranslateRange;
+	protected float currentTranslation;
+	protected float scrollV = 0.0f;
+	protected float targetTranslation;
     protected float startTranslation;
+
+	public float panBoundX = 50.0f;
+	public float panBoundMinZ = -70.0f;
+	public float panBoundMaxZ = 30.0f;
+	//panDistortionZ is how much the initial panning boundary has to be translated on the z axis for delta y = 1.0f height reduction
+	// This is needed because the camera looks at the map at an angle, so the boundary is a skewed box (a parallelepiped with a rect at top/bot)
+	protected float panDistortionZ;
+	protected float camStartY;
+	
 
 	void Awake()
 	{
@@ -41,7 +51,15 @@ public class CameraController : MonoBehaviour {
 		targetfov = cam.fieldOfView;
 		scrolling = false;
 
-        startTranslation = currentTranslation;
+
+		Vector3 planeAtCenterPos = GetPlanePosition(new Vector2(cam.pixelWidth * 0.5f, cam.pixelHeight * 0.5f));
+		float distance = Vector3.Distance(planeAtCenterPos, cam.transform.position);
+		
+		zoomTranslateRange = maxDistance - minDistance;
+		currentTranslation = (maxDistance - distance) / zoomTranslateRange;
+		startTranslation = currentTranslation;
+		panDistortionZ = cam.transform.forward.z / cam.transform.forward.y;
+		camStartY = cam.transform.position.y;
     }
 
 	// Update is called once per frame
@@ -66,14 +84,13 @@ public class CameraController : MonoBehaviour {
 		if(BuildingManager.Instance.BuildingPlane.Raycast(r, out enter))
 		{
 			var hitPos = r.origin + r.direction * enter;
-			//Debug.LogFormat("Time: {0}, touch {1}: {2}, hit: {3}", Time.time,  index, touchPos.ToString(), hitPos);
 			return hitPos;
 		}
 		return Vector3.zero;
 	}
 
 
-	//-1 meaning mouse
+	//index of -1 means mouse
 	Vector3 GetTouchPlanePosition(int index)
 	{
 		Vector3 screenPoint = index == -1 ? Input.mousePosition : new Vector3(Input.GetTouch(index).position.x, Input.GetTouch(index).position.y, 0.0f);
@@ -102,6 +119,7 @@ public class CameraController : MonoBehaviour {
 	bool mousePanning;
 
 	Vector3 sum = Vector3.zero;
+
 	void handlePanning()
 	{
 		var MouseCurrentPlanePos = GetTouchPlanePosition(-1);
@@ -114,6 +132,12 @@ public class CameraController : MonoBehaviour {
 
 		bool touchPan = false;
 		Vector3 tr = Vector3.zero;
+
+		if(Input.multiTouchEnabled && Input.touchCount == 0)
+		{
+			sum = Vector3.zero;
+		}
+
 		if(Input.multiTouchEnabled && Input.touchCount > 0 && !EventSystem.current.IsPointerOverGameObject(0))
 		{
 			touchPan = true;
@@ -123,8 +147,6 @@ public class CameraController : MonoBehaviour {
 				int id = Input.GetTouch(i).fingerId;
 				if(Input.GetTouch(i).phase == TouchPhase.Began)
 				{
-					//Debug.LogFormat("touch {0} begin, cam: {2}", id, translates[id], cam.transform.position);
-
 					boundPositions[id] = GetTouchPlanePosition(i);
 					translates[id] = Vector3.zero;
 				}
@@ -137,11 +159,10 @@ public class CameraController : MonoBehaviour {
 				if(Input.GetTouch(i).phase == TouchPhase.Ended)
 				{
 					sum += translates[id] * Input.touchCount;
-					//Debug.LogFormat("touch {0} end, tr: {1}, cam: {2}, sum: {3}", id, translates[id], cam.transform.position, sum);
 				}
 			}
 
-			//cam.transform.position += tr + sum;
+			
 
 		}
 
@@ -156,11 +177,16 @@ public class CameraController : MonoBehaviour {
 		{
 			tr.y = 0;
 			sum.y = 0;
-			cam.transform.position += tr + sum;
 
-//			Debug.LogFormat("avgdelta2: {0}", avgDelta);
-//			avgDelta.y = 0;
-//			cam.transform.position -= avgDelta;
+			Vector3 camPos = cam.transform.position;
+			float zDist = (camPos.y - camStartY) * panDistortionZ;
+
+			sum = new Vector3(Mathf.Clamp(sum.x, -panBoundX, panBoundX), sum.y, Mathf.Clamp(sum.z, panBoundMinZ + zDist, panBoundMaxZ + zDist));
+            cam.transform.position += tr + sum;
+
+			camPos = cam.transform.position;
+
+			cam.transform.position = new Vector3(Mathf.Clamp(camPos.x, -panBoundX, panBoundX), camPos.y, Mathf.Clamp(camPos.z, panBoundMinZ + zDist, panBoundMaxZ + zDist));
 		}
 
 		if(Input.GetMouseButtonUp(0))
@@ -171,17 +197,22 @@ public class CameraController : MonoBehaviour {
 	}
 
 
-
-    //TODO switch FOV to something like in handleScrolling()
 	//IMPORTANT: this way of pinching relies on boundpositions that are calculated in HandlePanning
 	// so make sure to call handlePanning before calling handlePinching
 	void handlePinching()
 	{
 		if(Input.touchCount > 1)
 		{
-			float diff = (boundPositions[0] - boundPositions[1]).magnitude / (GetTouchPlanePosition(0) - GetTouchPlanePosition(1)).magnitude;
-			//Debug.LogFormat("diff: {0}", diff);
-			cam.fieldOfView = Mathf.Clamp(cam.fieldOfView * diff, 5.0f, 80.0f);
+			Vector3 planeAtCenterPos = GetPlanePosition(new Vector2(cam.pixelWidth * 0.5f, cam.pixelHeight * 0.5f));
+			float distance = Vector3.Distance(planeAtCenterPos, cam.transform.position);
+			
+            float diff = (boundPositions[0] - boundPositions[1]).magnitude / (GetTouchPlanePosition(0) - GetTouchPlanePosition(1)).magnitude;
+
+			float newDist = Mathf.Clamp(diff * distance, minDistance, maxDistance);
+			cam.transform.position = planeAtCenterPos + cam.transform.forward * (-newDist);
+
+			//sync scrolling variable
+			currentTranslation = (maxDistance - newDist) / zoomTranslateRange;
 		}
 	}
 
@@ -191,13 +222,17 @@ public class CameraController : MonoBehaviour {
         var d = Input.GetAxis("Mouse ScrollWheel");
 		if(Mathf.Abs(d) > 0.1)
 		{
+			if(!scrolling)
+			{
+				targetTranslation = currentTranslation;
+			}
 			scrolling = true;
             var relInc = (d > 0) ? zoomIncrement : -zoomIncrement;
             targetTranslation = Mathf.Clamp01(targetTranslation + relInc);
 		}
 		if(scrolling)
 		{
-            float newTranslation = Mathf.SmoothDamp(currentTranslation, targetTranslation, ref zoomV, 0.1f);
+            float newTranslation = Mathf.SmoothDamp(currentTranslation, targetTranslation, ref scrollV, 0.1f);
             cam.transform.position = cam.transform.position + cam.transform.forward * (newTranslation - currentTranslation) * zoomTranslateRange;
             currentTranslation = newTranslation;
         }
@@ -240,9 +275,6 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 
-
-		//Debug.LogFormat("t: {0}, clickbegin {1}, md {2}, mu {3}", Time.time, clickBegin, Input.GetMouseButtonDown(0), Input.GetMouseButtonUp(0));
-
 		if(!Input.mousePresent)
 		{
 			return;
@@ -265,9 +297,6 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 	}
-
-
-
 
 
 	void DebugAll()

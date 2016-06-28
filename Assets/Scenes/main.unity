@@ -94,7 +94,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 481390, guid: 59824c36d787714459d39edad2b10600, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -0.032604
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 481390, guid: 59824c36d787714459d39edad2b10600, type: 2}
       propertyPath: m_LocalPosition.y
@@ -102,7 +102,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 481390, guid: 59824c36d787714459d39edad2b10600, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0.01306
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 481390, guid: 59824c36d787714459d39edad2b10600, type: 2}
       propertyPath: m_LocalRotation.x
@@ -433,6 +433,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11430660, guid: 46417fb17771dce42baf45e912bf29c1, type: 2}
       propertyPath: m_ShowMaskGraphic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11453174, guid: 46417fb17771dce42baf45e912bf29c1, type: 2}
+      propertyPath: m_UiScaleMode
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1109,9 +1113,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sqrMinMoveMagnitude: 100
-  zoomTranslateRange: 70
-  currentTranslation: 0.2
+  minDistance: 10
+  maxDistance: 80
   zoomIncrement: 0.1
+  panBoundX: 50
+  panBoundMinZ: -70
+  panBoundMaxZ: 30
 --- !u!4 &1375673824 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 851d11542d51c464e89acf6875599172, type: 2}
@@ -1447,7 +1454,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 488594, guid: 26224e43cf9b79041a1d434adce42533, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 45.37
+      value: 45.43
       objectReference: {fileID: 0}
     - target: {fileID: 488594, guid: 26224e43cf9b79041a1d434adce42533, type: 2}
       propertyPath: m_LocalPosition.y
