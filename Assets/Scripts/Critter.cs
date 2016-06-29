@@ -102,6 +102,7 @@ public class Critter : BaseEntity, IMySelectable{
 		health -= dmg;
 		if(health <= 0.0f)
 		{
+			health = 0.0f;
 			killed();
 		}
 

@@ -8,6 +8,7 @@ using System.Collections;
 
 public class BaseEntity : MonoBehaviour {
 
+	//team is ignored for now
 	public ETeamEnum team;
 
 	public string iconName;

@@ -67,15 +67,6 @@ public class Tower : BaseEntity, IMySelectable{
 		}
 		else
 		{
-			/*
-			int count, newcount;
-			do
-			{
-				count = crittersClose.Count;
-				crittersClose.Remove(null);
-				newcount = crittersClose.Count;
-			} while(newcount < count);
-			*/
 
 			removables.Clear();
 			for(int i = 0; i < crittersClose.Count; i++)
