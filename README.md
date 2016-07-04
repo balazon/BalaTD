@@ -1,29 +1,40 @@
 # BalaTD
 A tower defense game in unity
 
+![alt tag](https://cloud.githubusercontent.com/assets/3685997/16569983/9e7f311c-423d-11e6-9ea6-282a24cd6ed0.png)
 
 The goal in the game is to stop the creatures from reaching your castle by building towers that attack them.
 Creatures are spawned from the cave and are coming out in waves.
 Creature types in order are:
  - Spidey - little spider
  - Arachnola - bigger spider
- - Necro - a necromancer
+ - Necro - a humanoid necromancer 
 
 Towers can be placed on the hills:
  - after clicking on an empty spot it will show a green/grey square
  - green means the spot is available
- - grey means you can't build there
+ - grey means you can't build there (ground)
  
  There are currently four kind of towers:
- - fire
- - venom
- - lightning
- - ice
- 
- Fire has splash damage
- Venom has dot (damage over time) damage
- Lightning has a faster fire rate, good damage
- Ice slows the enemy it hits
+ - fire - splash damage
+ - venom - dot (damage over time) damage
+ - lightning - faster fire rate coupled with good damage
+ - ice - slows the enemy it hits
  
  Each tower can be upgraded until it reaches its maximum level (level 3).
  
+
+It does not use RVO2 library currently (instead for avoidance Unity's Navmesh Agent is used), though that was not always the case in the prototype, but anyway here's RVO2's license agreement:
+
+
+Copyright © and trademark ™ 2008-15 University of North Carolina at Chapel Hill. All rights reserved.
+
+Permission to use, copy, modify, and distribute this software and its documentation for educational, research, and non-profit purposes, without fee, and without a written agreement is hereby granted, provided that the above copyright notice, this paragraph, and the following four paragraphs appear in all copies.
+
+Permission to incorporate this software into commercial products may be obtained by contacting the Office of Technology Development at the University of North Carolina at Chapel Hill <otd@unc.edu>.
+
+This software program and documentation are copyrighted by the University of North Carolina at Chapel Hill. The software program and documentation are supplied "as is," without any accompanying services from the University of North Carolina at Chapel Hill or the authors. The University of North Carolina at Chapel Hill and the authors do not warrant that the operation of the program will be uninterrupted or error-free. The end-user understands that the program was developed for research purposes and is advised not to rely exclusively on the program for any reason.
+
+IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
