@@ -89,7 +89,7 @@ public class Bullet : MonoBehaviour {
 			{
 				foreach(Critter c in crittersClose)
 				{
-					if(c.alreadyKilled)
+					if(!c || c.alreadyKilled)
 					{
 						continue;
 					}
@@ -102,7 +102,7 @@ public class Bullet : MonoBehaviour {
 					c.TakeDamage(baseDamage);
 				}
 			}
-			else if(!target.alreadyKilled)
+			else if(target && !target.alreadyKilled)
 			{
 				target.AddDot(dotDps, dotDuration);
 				if(slowRate > 0.0f)

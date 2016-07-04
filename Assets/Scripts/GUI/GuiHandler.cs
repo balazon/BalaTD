@@ -24,6 +24,7 @@ public class GuiHandler : MonoBehaviour {
 	public GameObject buildingTowerContext {get; private set;}
 	protected GameObject selectedTowerContext;
 	protected GameObject highscoresContext;
+	protected GameObject instructionsContext;
 	protected GameObject gameOverContext;
 	protected GameObject pauseMenuContext;
 
@@ -67,6 +68,8 @@ public class GuiHandler : MonoBehaviour {
 		mainMenuContext = transform.Find("MainMenu").gameObject;
 
 		highscoresContext = transform.Find("Highscores").gameObject;
+
+		instructionsContext = transform.Find("Instructions").gameObject;
 
 		hud = transform.Find("HUD").gameObject;
 
@@ -136,6 +139,14 @@ public class GuiHandler : MonoBehaviour {
 		EventSystem.current.SetSelectedGameObject(firstChild);
 		var hd = transform.Find("HighscoreUpdater").GetComponent<HighscoreDisplay>();
 		hd.FillContent();
+	}
+
+	public void ShowInstructions()
+	{
+		DisableAllGUI();
+		instructionsContext.SetActive(true);
+		var firstChild = instructionsContext.transform.GetChild(0).gameObject;
+		EventSystem.current.SetSelectedGameObject(firstChild);
 	}
 
 	public void Exit()
@@ -358,7 +369,8 @@ public class GuiHandler : MonoBehaviour {
 		if(buildingTowerContext.activeSelf) buildingTowerContext.SetActive(false);
 		if(selectedTowerContext.activeSelf) selectedTowerContext.SetActive(false);
 		if(highscoresContext.activeSelf) highscoresContext.SetActive(false);
-		if(gameOverContext.activeSelf) gameOverContext.SetActive(false);
+		if (instructionsContext.activeSelf) instructionsContext.SetActive(false);
+        if (gameOverContext.activeSelf) gameOverContext.SetActive(false);
 		if(pauseMenuContext.activeSelf) pauseMenuContext.SetActive(false);
 		if(towerDetailsPanel.activeSelf) towerDetailsPanel.SetActive(false);
 		if(critterDetailsPanel.activeSelf) critterDetailsPanel.SetActive(false);

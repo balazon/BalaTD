@@ -38,6 +38,20 @@ public class GameManager : MonoBehaviour {
 	
 	}
 
+	public void DestroyDynamic()
+	{
+		
+		Transform[] allTransforms = DynamicObjectContainer.GetComponentsInChildren<Transform>();
+		foreach (Transform child in allTransforms)
+		{
+			if(child == DynamicObjectContainer.transform)
+			{
+				continue;
+			}
+			Destroy(child.gameObject);
+		}
+	}
+
 	void OnApplicationFocus(bool focusStatus) {
 		//Debug.Log ("focus: " + focusStatus);
 		//		if(focusStatus == true)

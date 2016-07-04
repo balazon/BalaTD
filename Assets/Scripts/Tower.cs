@@ -20,7 +20,7 @@ public class Tower : BaseEntity, IMySelectable{
 	//for finding closest target
 	public int sampleCount = 10;
 
-	protected float cooldownRemaining = -1.0f;
+	public float cooldownRemaining = -1.0f;
 
 	protected IList<Critter> crittersClose;
 

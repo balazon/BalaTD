@@ -8,6 +8,13 @@ public class MakeScreenshot : MonoBehaviour {
 	
 	}
 
+	public void Update()
+	{
+		if(Input.GetMouseButtonUp(0))
+		{
+			Capture();
+		}
+    }
 
 	public void Capture()
 	{

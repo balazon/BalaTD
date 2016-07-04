@@ -122,6 +122,8 @@ public class Player : MonoBehaviour {
 		spawner.Reset();
 		castle.Reset();
 
+		GameManager.Instance.DestroyDynamic();
+
 		GameManager.ThePlayerController.State = EControllerState.IN_MENU;
 		GameManager.ThePlayerController.SetNewSelected(null);
 
