@@ -124,9 +124,7 @@ public class BuildingManager : MonoBehaviour {
 
 	public Tower buildTower(ETower type, int i, int j)
 	{
-
 		return buildTowerAt(i, j, Configurations.Instance.GetBaseTowerPrefab(type), Configurations.Instance.GetTowerLevels(type));
-		//return null;
 	}
 
 

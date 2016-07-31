@@ -91,14 +91,7 @@ public class TowerDetails : MonoBehaviour {
 		var NextLevelText = panel.transform.Find("NextLevelText").GetComponent<Text>();
 		var SellText = panel.transform.Find("SellText").GetComponent<Text>();
 		
-		
-		
-		//icon.sprite = iconMap[Configurations.Instance.GetBaseTowerPrefab(type).GetComponent<Tower>().iconName];
-		//icon.sprite = iconMap[Configurations.TowerNameFromType(type)];
-
 		icon.sprite = GuiHandler.Instance.GetIcon(type.ToString());
-		
-		
 		
 		var sb = new System.Text.StringBuilder();
 		

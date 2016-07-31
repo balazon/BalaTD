@@ -105,17 +105,7 @@ public class HighscoreManager : MonoBehaviour {
 		{
 			hr.name = "-";
 		}
-		/*
-		commented out - one name can now have multiple records
-		foreach (var r in allscores)
-		{
-			if(r.name == hr.name)
-			{
-				//name already exists
-				return false;
-			}
-		}
-		*/
+
 		int pos = 0;
 		int min = Math.Min (AllScores.Count, topScoresCount);
 		for(pos = 0; pos < min; pos++)

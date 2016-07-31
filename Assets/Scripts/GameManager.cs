@@ -52,31 +52,4 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void OnApplicationFocus(bool focusStatus) {
-		//Debug.Log ("focus: " + focusStatus);
-		//		if(focusStatus == true)
-		//		{
-		//			UIFX.Instance.FocusLost = false;
-		//			AudioListener.pause = false;
-		//			return;
-		//		}
-		//		UIFX.Instance.FocusLost = true;
-		//		AudioListener.pause = true;
-		//		HandleFocusLost();
-	}
-
-	void OnApplicationPause(bool pauseStatus)
-	{
-		//ThePlayer.Paused = pauseStatus;
-		/*Debug.Log ("pause: " + pauseStatus);
-		if(pauseStatus == false)
-		{
-			AudioListener.pause = false;
-			return;
-		}
-		AudioListener.pause = true;
-		HandleFocusLost();*/
-	}
-
-
 }

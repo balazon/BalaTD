@@ -36,13 +36,6 @@ public class BaseEntity : MonoBehaviour {
 	
 	}
 
-//	protected void notifyObservers()
-//	{
-//		if(notify != null)
-//		{
-//			notify();
-//		}
-//	}
 
 	//Destroys gameobject, but notifies observers first
 	public void Finished()
